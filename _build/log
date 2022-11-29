@@ -1,0 +1,5 @@
+# dune init project Tpfinal
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root: /Users/lucasrialbrandariz/Documents/GitHub/jsonlang-ocamlyacc
+# Auto-detected concurrency: 4

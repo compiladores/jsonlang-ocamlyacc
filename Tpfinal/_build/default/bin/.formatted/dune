@@ -1,4 +1,0 @@
-(executable
- (public_name Tpfinal)
- (name main)
- (libraries Tpfinal))

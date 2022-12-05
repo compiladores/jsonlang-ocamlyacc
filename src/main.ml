@@ -12,7 +12,7 @@ let is_printable_e : expression -> bool = function
 
 let is_printable_s : statement -> bool = function
   | String _ | Break | Continue -> true
-  | If _ | While _ | Statement _ | Iterator _ | Do _ | Declare _ | Set _ | Call _ | Return _ -> false
+  | If _ | If_no_else _ | While _ | Statement _ | Iterator _ | Do _ | Declare _ | Set _ | Call _ | Return _ -> false
 
 let string_of_value_e (e : expression) : string =
   match e with
@@ -34,10 +34,15 @@ let rec stepStatement (e : statement) : statement=
   | Continue -> failwith "Cannot step"
 
   | If (e, s1, s2) when is_printable_e e && is_printable_s s1 && is_printable_s s2 -> 
-      String ("{'if': { 'cond': " ^ string_of_value_e e ^ ", 'then': " ^ string_of_value_s s1 ^ "}, 'else': "^ string_of_value_s s2 ^ "}")
+      String ("{'if': {'cond': " ^ string_of_value_e e ^ ", 'then': " ^ string_of_value_s s1 ^ "}, 'else': "^ string_of_value_s s2 ^ "}")
   | If (e, s1, s2) when is_printable_e e && is_printable_s s1 -> If(e, s1, stepStatement s2)
   | If (e, s1, s2) when is_printable_e e -> If(e, stepStatement s1, s2)
   | If (e, s1, s2) ->  If(stepExpression e, s1, s2)
+
+  | If_no_else (e, s) when is_printable_e e && is_printable_s s -> 
+      String ("{'if': {'cond': " ^ string_of_value_e e ^ ", 'then': " ^ string_of_value_s s ^ "}}")
+  | If_no_else (e, s) when is_printable_e e -> If_no_else(e, stepStatement s)
+  | If_no_else (e, s) ->  If_no_else(stepExpression e, s)
   
   | While (e, s) when is_printable_e e && is_printable_s s -> 
       String ("{'while': " ^ string_of_value_e e ^ ", 'do': " ^ string_of_value_s s ^ "}")

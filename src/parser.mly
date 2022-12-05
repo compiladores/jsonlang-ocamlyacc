@@ -4,6 +4,7 @@ open Ast
 
 %token <int> NUMBER
 %token <string> STRING
+%token <string> MINUS
 %token <string> UNOP
 %token <string> BINOP
 
@@ -74,6 +75,7 @@ topStatement:
 statement:
 	//TODO: make else optional
 	| IF; e = expression; THEN; s1 = statement; ELSE; s2 = statement { If (e, s1, s2) }
+	| IF; e = expression; THEN; s = statement; { If_no_else (e, s) }
 	| WHILE; e = expression; DO; s = statement { While (e, s) }
 	//TODO: Add array of statements
 	//TODO: make step optional
@@ -89,7 +91,9 @@ statement:
 	;
 
 expression:
+	| u = MINUS; e = expression { Unop(u, e) }
 	| u = UNOP; e = expression { Unop(u, e) }
+	| e1 = expression; b = MINUS; e2 = expression { Binop(b, e1, e2) }
 	| e1 = expression; b = BINOP; e2 = expression { Binop(b, e1, e2) }
 	//TODO: | x = STRING; LPAREN; eArray = expression array; RPAREN { Call(x, eArray) }
 	| x = STRING; LPAREN; eArray = expression; RPAREN { Call(x, eArray) }
@@ -105,6 +109,7 @@ declarationStatement:
 printable:
 	//TODO: make else optional
 	| IF; e = printable; THEN; s1 = printable; ELSE; s2 = printable { If (e, s1, s2) }
+	| IF; e = printable; THEN; s1 = printable; { If_no_else (e, s1) }
 	| WHILE; e = printable; DO; s = printable { While (e, s) }
 	//TODO: Add array of statements
 	//TODO: make step optional
@@ -144,7 +149,7 @@ printable:
 // IF 								if ... then ... else ...
 // WHILE 							while ... do ...
 // FOR 								for ... form ... to ... step ... do ...
-// DO 								do ... until
+// DO 								do ... until ...
 // BREAK 							break
 // CONTINUE 					continue
 // DECLARE 						let ... = ...

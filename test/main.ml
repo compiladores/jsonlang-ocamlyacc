@@ -43,18 +43,39 @@ let tests = [
   make_test "Return call" "{'return': {'call': function, 'args': s}}" "return function(s)";
   make_test "Return call with binop" "{'return': {'call': function, 'args': {'binop': *, 'argl': 2, 'argr': 3}}}" "return function(2*3)";
   
-  make_test "Call function" "{'call': function, 'args': 3}" "function(3)";
+  make_test "Call function" "{'call': someFunction, 'args': 0}" "someFunction(0)";
+  make_test "Call function with number" "{'call': function, 'args': 3}" "function(3)";
+  make_test "Call function with string" "{'call': function, 'args': j}" "function(j)";
   make_test "Call function with unop" "{'call': function, 'args': {'unop': !, 'arg': a}}" "function(!a)";
   make_test "Call function with binop" "{'call': function, 'args': {'binop': /, 'argl': 1, 'argr': 2}}" "function(1/2)";
+  make_test "Call function with call" "{'call': function, 'args': {'call': otherFunction, 'args': e}}" "function(otherFunction(e))";
   
-  make_test "Set" "{'set': x, 'value': 1}" "x=1";
-  make_test "Set" "{'set': x, 'value': 1}" "x=1";
+  make_test "Set number" "{'set': x, 'value': 1}" "x=1";
+  make_test "Set string" "{'set': x, 'value': y}" "x=y";
+  make_test "Set unop" "{'set': x, 'value': {'unop': ~, 'arg': 7}}" "x=~7";
+  make_test "Set binop" "{'set': x, 'value': {'binop': -, 'argl': 6, 'argr': 8}}" "x = 6-8";
+  make_test "Set call" "{'set': x, 'value': {'call': function, 'args': 77}}" "x=function(77)";
   
+  make_test "Declare number" "{'declare': x, 'value': 899}" "let x=899";
+  make_test "Declare string" "{'declare': x, 'value': something}" "let x=something";
+  make_test "Declare unop" "{'declare': x, 'value': {'unop': !, 'arg': value}}" "let x=!value";
+  make_test "Declare binop" "{'declare': x, 'value': {'binop': <, 'argl': 22, 'argr': 200}}" "let x = 22<200";
+  make_test "Declare call" "{'declare': x, 'value': {'call': function, 'args': argument}}" "let x=function(argument)";
+  
+  make_test "Do with set and string" "{'do': {'set': x, 'value': 1}, 'until': somethingHappens}" "do x=1 until somethingHappens";
+  make_test "Do with set and binop" "{'do': {'declare': x, 'value': {'binop': ^, 'argl': x, 'argr': 2}}, 'until': {'binop': >=, 'argl': x, 'argr': 1000}}" "do let x=x^2 until x>=1000";
+  
+  make_test "If with string and set" "{'if': {'cond': s, 'then': {'set': x, 'value': 1}}, 'else': {'set': x, 'value': 2}}" "if s then x=1 else x=2";
+  make_test "If with binop, call and break" "{'if': {'cond': {'binop': ==, 'argl': x, 'argr': 5}, 'then': 'break'}, 'else': {'set': x, 'value': {'binop': +, 'argl': x, 'argr': 1}}}" "if x==5 then break else x=x+1";
+  make_test "If with no else" "{'if': {'cond': s, 'then': {'set': x, 'value': 1}}}" "if s then x=1";
+
+  make_test "Iterator" "{'iterator': i, 'from': 0, 'to': 10, 'step': 2, 'do': {'set': x, 'value': 1}}" "for i from 0 to 10 step 2 do x=1";
+
+  make_test "While" "{'while': s, 'do': {'declare': x, 'value': 4}}" "while s do let x=4";
+  make_test "While with binop" "{'while': {'binop': ~=, 'argl': x, 'argr': 5}, 'do': {'set': x, 'value': {'binop': %, 'argl': x, 'argr': 2}}}" "while x ~= 5 do x=x%2";
+
   (* Other tests *)
   make_test "Remove spaces spaces" "{'set': x, 'value': 1}" " x   =            1 ";
-
-
-  (* make_test "While" "{'while': {'binop': <, 'argl': x, 'argr': 3}, 'do': {'binop': +, 'argl': x, 'argr': 1}}" "while x < 3 do x + 1"; *)
 
   (* make_test "return" (Return(Number 2)) "return 2"; *)
   (* make_test "return" (Return(Binop("+", Number 2, Number 2))) "return 2+2";

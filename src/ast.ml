@@ -43,6 +43,7 @@
 
   type statement = 
   | If of expression * statement * statement
+  | If_no_else of expression * statement
   | While of expression * statement
   (* | Statement of statement array *)
   | Statement of statement

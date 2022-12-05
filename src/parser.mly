@@ -80,6 +80,7 @@ statement:
 	//TODO: Add array of statements
 	//TODO: make step optional
 	| FOR; x = STRING; FROM; e1 = expression; TO; e2 = expression; STEP; e3 = expression; DO; s = statement; { Iterator(x, e1, e2, e3, s) }
+	| FOR; x = STRING; FROM; e1 = expression; TO; e2 = expression; DO; s = statement; { Iterator_no_step(x, e1, e2, s) }
 	| DO; s = statement; UNTIL; e = expression { Do (s, e) }
 	| LET; x = STRING; EQUALS; e = expression { Declare (x, e) }
 	| x = STRING; EQUALS; e = expression { Set (x, e) }

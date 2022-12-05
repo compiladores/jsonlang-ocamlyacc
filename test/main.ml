@@ -70,6 +70,7 @@ let tests = [
   make_test "If with no else" "{'if': {'cond': s, 'then': {'set': x, 'value': 1}}}" "if s then x=1";
 
   make_test "Iterator" "{'iterator': i, 'from': 0, 'to': 10, 'step': 2, 'do': {'set': x, 'value': 1}}" "for i from 0 to 10 step 2 do x=1";
+  make_test "Iterator with no step" "{'iterator': i, 'from': 0, 'to': 10, 'do': {'set': x, 'value': 1}}" "for i from 0 to 10 do x=1";
 
   make_test "While" "{'while': s, 'do': {'declare': x, 'value': 4}}" "while s do let x=4";
   make_test "While with binop" "{'while': {'binop': ~=, 'argl': x, 'argr': 5}, 'do': {'set': x, 'value': {'binop': %, 'argl': x, 'argr': 2}}}" "while x ~= 5 do x=x%2";

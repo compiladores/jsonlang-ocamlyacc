@@ -12,7 +12,7 @@ let is_printable_e : expression -> bool = function
 
 let is_printable_s : statement -> bool = function
   | String _ | Break | Continue -> true
-  | If _ | If_no_else _ | While _ | Statement _ | Iterator _ | Do _ | Declare _ | Set _ | Call _ | Return _ -> false
+  | If _ | If_no_else _ | While _ | Statement _ | Iterator _ | Iterator_no_step _ | Do _ | Declare _ | Set _ | Call _ | Return _ -> false
 
 let string_of_value_e (e : expression) : string =
   match e with
@@ -57,6 +57,12 @@ let rec stepStatement (e : statement) : statement=
   | Iterator (x, e1, e2, e3, s) when is_printable_e e1 && is_printable_e e2 -> Iterator(x, e1, e2, stepExpression e3, s)
   | Iterator (x, e1, e2, e3, s) when is_printable_e e1 -> Iterator(x, e1, stepExpression e2, e3, s)
   | Iterator (x, e1, e2, e3, s) -> Iterator(x, stepExpression e1, e2, e3, s)
+  
+  | Iterator_no_step (x, e1, e2, s) when is_printable_e e1 && is_printable_e e2 && is_printable_s s -> 
+      String("{'iterator': " ^ x ^ ", 'from': " ^ string_of_value_e e1 ^ ", 'to': " ^ string_of_value_e e2 ^ ", 'do': " ^ string_of_value_s s ^"}")
+  | Iterator_no_step (x, e1, e2, s) when is_printable_e e1 && is_printable_e e2 -> Iterator_no_step(x, e1, e2, stepStatement s)
+  | Iterator_no_step (x, e1, e2, s) when is_printable_e e1 -> Iterator_no_step(x, e1, stepExpression e2, s)
+  | Iterator_no_step (x, e1, e2, s) -> Iterator_no_step(x, stepExpression e1, e2, s)
 
   | Do (s, e) when is_printable_s s && is_printable_e e -> 
       String ("{'do': " ^ string_of_value_s s ^ ", 'until': " ^ string_of_value_e e ^ "}")

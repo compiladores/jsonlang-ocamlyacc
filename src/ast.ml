@@ -48,6 +48,7 @@
   (* | Statement of statement array *)
   | Statement of statement
   | Iterator of string * expression * expression * expression * statement
+  | Iterator_no_step of string * expression * expression * statement
   | Do of statement * expression
   | Break
   | Continue

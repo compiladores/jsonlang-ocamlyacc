@@ -37,15 +37,15 @@
   | Unop of string * expression
   | Binop of string * expression * expression
   | String of string
-  (* | Call of string * expression array *)
   | Call of string * expression list
   | Number of int
+  (* Add printable to be able to print jsonLang*)
+  | Printable of string
 
   type statement = 
   | If of expression * statement * statement
   | If_no_else of expression * statement
   | While of expression * statement
-  (* | Statement of statement array *)
   | StatementBlock of statement list
   | Iterator of string * expression * expression * expression * statement
   | Iterator_no_step of string * expression * expression * statement
@@ -54,12 +54,11 @@
   | Continue
   | Declare of string * expression
   | Set of string * expression
-  (* | Call of string * expression array *)
   | Call of string * expression list
   | Return of expression
-  (* Add string to be able to print *)
-  | String of string
   | DeclarationStatement of string * string * statement
+  (* Add printable to be able to print jsonLang*)
+  | Printable of string
 
   (* type declarationStatement =
   (* | DeclarationStatement of string * string array * statement *)

@@ -38,7 +38,7 @@
   | Binop of string * expression * expression
   | String of string
   (* | Call of string * expression array *)
-  | Call of string * expression
+  | Call of string * expression list
   | Number of int
 
   type statement = 
@@ -46,7 +46,7 @@
   | If_no_else of expression * statement
   | While of expression * statement
   (* | Statement of statement array *)
-  | Statement of statement
+  | StatementBlock of statement
   | Iterator of string * expression * expression * expression * statement
   | Iterator_no_step of string * expression * expression * statement
   | Do of statement * expression
@@ -55,18 +55,19 @@
   | Declare of string * expression
   | Set of string * expression
   (* | Call of string * expression array *)
-  | Call of string * expression
+  | Call of string * expression list
   | Return of expression
   (* Add string to be able to print *)
   | String of string
-
-  type declarationStatement =
-  (* | DeclarationStatement of string * string array * statement *)
   | DeclarationStatement of string * string * statement
+
+  (* type declarationStatement =
+  (* | DeclarationStatement of string * string array * statement *)
+  | DeclarationStatement of string * string * statement *)
 
   type topStatement =
   | Statement of statement
-  | DeclarationStatement of declarationStatement
+  | DeclarationStatement of string * string * statement
 
   type jsonLang = 
   (* | TopStatement of topStatement array *)

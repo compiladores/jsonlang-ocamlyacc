@@ -7,6 +7,7 @@ let digit = ['0'-'9']
 let number = digit+
 let letter = ['a'-'z' 'A'-'Z']
 let string = letter+
+let stringComma = string white* ","?
 let minus = ['-']
 let unop = ['-' '!' '~']
 (* let binop = ["+" "-" "*" "/" "^" "%" "&" "|" ">>" "<<" "<" "<=" ">" ">=" "==" "~=" "and" "or"] *)
@@ -39,13 +40,19 @@ rule read =
   | "~=" {BINOP (Lexing.lexeme lexbuf)}
   | "and" {BINOP (Lexing.lexeme lexbuf)}
   | "or" {BINOP (Lexing.lexeme lexbuf)}
-
   | "=" { EQUALS }
+  | ";" { SEMICOLON }
+  | "," { COMMA }
   | "(" { LPAREN }
   | ")" { RPAREN }
   | "{" { LBRACE }
   | "}" { RBRACE }
+  | "[" white* stringComma+ white* "]" { STRINGLIST (Lexing.lexeme lexbuf) }
+  | "[" { LBRACKET }
+  | "]" { RBRACKET }
   | "return" { RETURN }
+  | "func" { FUNCTION }
+
 
   | number { NUMBER (int_of_string (Lexing.lexeme lexbuf)) }
   | string { STRING (Lexing.lexeme lexbuf) }

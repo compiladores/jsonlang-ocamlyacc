@@ -10,15 +10,31 @@ let is_printable_e : expression -> bool = function
   | String _ | Number _ -> true
   | Unop _ | Binop _ | Call _  -> false
 
+let rec is_printable_e_list : expression list -> bool = function
+  | [] -> true
+  | x :: sx ->
+  match x with
+  | String _ | Number _ -> is_printable_e_list sx
+  | Unop _ | Binop _ | Call _  -> false
+
 let is_printable_s : statement -> bool = function
   | String _ | Break | Continue -> true
-  | If _ | If_no_else _ | While _ | Statement _ | Iterator _ | Iterator_no_step _ | Do _ | Declare _ | Set _ | Call _ | Return _ -> false
+  | If _ | If_no_else _ | While _ | StatementBlock _ | Iterator _ | Iterator_no_step _ | Do _ | Declare _ | Set _ | Call _ | Return _ | DeclarationStatement _ -> false
 
 let string_of_value_e (e : expression) : string =
   match e with
   | Number e -> string_of_int e
   | String e -> e
   | _ -> failwith "Cannot get string of expression"
+
+(* let string_of_value_e_list (e : expression list) : string =
+  match e with
+  | [] -> ""
+  | x :: sx ->
+  match x with
+  | String _ | Number _ -> string_of_int sx
+  | Unop _ | Binop _ | Call _  -> false *)
+  
 
 let string_of_value_s (s : statement) : string =
   match s with
@@ -28,19 +44,20 @@ let string_of_value_s (s : statement) : string =
   | _ -> failwith "Cannot get string of statement"
 
 let rec stepStatement (e : statement) : statement=
+print_endline ("\n\n Step Statement \n\n");  
   match e with
   | String _ -> failwith "Cannot step"
   | Break -> failwith "Cannot step"
   | Continue -> failwith "Cannot step"
 
   | If (e, s1, s2) when is_printable_e e && is_printable_s s1 && is_printable_s s2 -> 
-      String ("{'if': {'cond': " ^ string_of_value_e e ^ ", 'then': " ^ string_of_value_s s1 ^ "}, 'else': "^ string_of_value_s s2 ^ "}")
+      String ("{'if': [{'cond': " ^ string_of_value_e e ^ ", 'then': " ^ string_of_value_s s1 ^ "}], 'else': "^ string_of_value_s s2 ^ "}")
   | If (e, s1, s2) when is_printable_e e && is_printable_s s1 -> If(e, s1, stepStatement s2)
   | If (e, s1, s2) when is_printable_e e -> If(e, stepStatement s1, s2)
   | If (e, s1, s2) ->  If(stepExpression e, s1, s2)
 
   | If_no_else (e, s) when is_printable_e e && is_printable_s s -> 
-      String ("{'if': {'cond': " ^ string_of_value_e e ^ ", 'then': " ^ string_of_value_s s ^ "}}")
+      String ("{'if': [{'cond': " ^ string_of_value_e e ^ ", 'then': " ^ string_of_value_s s ^ "}]}")
   | If_no_else (e, s) when is_printable_e e -> If_no_else(e, stepStatement s)
   | If_no_else (e, s) ->  If_no_else(stepExpression e, s)
   
@@ -49,7 +66,7 @@ let rec stepStatement (e : statement) : statement=
   | While (e, s) when is_printable_e e -> While(e, stepStatement s)
   | While (e, s) -> While(stepExpression e, s)
   
-  | Statement _ -> failwith "Implement statement block"
+  | StatementBlock _ -> failwith "Implement statement block"
   
   | Iterator (x, e1, e2, e3, s) when is_printable_e e1 && is_printable_e e2 && is_printable_e e3 && is_printable_s s -> 
       String("{'iterator': " ^ x ^ ", 'from': " ^ string_of_value_e e1 ^ ", 'to': " ^ string_of_value_e e2 ^ ", 'step': " ^ string_of_value_e e3 ^ ", 'do': " ^ string_of_value_s s ^"}")
@@ -77,17 +94,25 @@ let rec stepStatement (e : statement) : statement=
       String ("{'set': " ^ x ^ ", 'value': " ^ string_of_value_e e ^ "}")
   | Set (x, e) -> Set (x, stepExpression e)
   
-  | Call (x, e) when is_printable_e e -> 
-      String ("{'call': " ^ x ^ ", 'args': " ^ string_of_value_e e ^ "}")
-  | Call (x, e) -> Call (x, stepExpression e)
+  (* | Call (x, e) -> 
+      String ("{'call': " ^ x ^ ", 'args': [" ^ translateExpressionList (resolveExpressionList e) ^ "]}") *)
+
+  | Call (x, e) when is_printable_e_list e -> 
+      String ("{'call': " ^ x ^ ", 'args': [" ^ translateExpressionList e ^ "]}")
+  | Call (x, e) -> Call (x, resolveExpressionList e)
   
   | Return (e) when is_printable_e e ->
       String("{'return': " ^ string_of_value_e e ^ "}")
   | Return (e) -> Return(stepExpression e)
+
+  | DeclarationStatement (x1, x2, s) when is_printable_s s -> 
+      String ("{'function': " ^ x1 ^ ", 'args': " ^ x2 ^ ", 'block': " ^ string_of_value_s s ^ "}")
+  | DeclarationStatement (x1, x2, s) -> DeclarationStatement (x1, x2, stepStatement s)
 and stepExpression (e: expression) : expression=
+  print_endline ("\n\n Step expression \n\n");
   match e with
-  | Number _ -> failwith "Cannot step"
-  | String _ -> failwith "Cannot step"
+  | Number e -> Number e
+  | String e -> String e
   
   | Unop (s, e) when is_printable_e e -> 
       String ("{'unop': " ^ s ^ ", 'arg': " ^ string_of_value_e e ^ "}")
@@ -99,9 +124,25 @@ and stepExpression (e: expression) : expression=
   | Binop (s, e1, e2) -> Binop (s, stepExpression e1, e2)
 
     (* | Call of string * expression array *)
-  | Call (x, e) when is_printable_e e -> 
-      String ("{'call': " ^ x ^ ", 'args': " ^ string_of_value_e e ^ "}")
-  | Call (x, e) -> Call (x, stepExpression e)
+  (* | Call (x, e) when is_printable_e e -> 
+      String ("{'call': " ^ x ^ ", 'args': [" ^ string_of_value_e e ^ "]}")
+  | Call (x, e) -> Call(x, stepExpression e) *)
+  | Call (x, e) when is_printable_e_list e -> 
+    String ("{'call': " ^ x ^ ", 'args': [" ^ translateExpressionList e ^ "]}")
+  | Call (x, e) -> Call (x, resolveExpressionList e)
+
+and resolveExpressionList (e : expression list) : expression list =
+  (* match e with
+  | [] -> []
+  | h :: t -> stepExpression h :: resolveExpressionList t *)
+  print_endline ("\n\n Resolve Expression List \n\n");
+  List.map stepExpression e 
+
+and translateExpressionList (e : expression list) : string =
+print_endline ("\n\n Translate Expression List \n\n");
+  let x = List.map string_of_value_e e in 
+  String.concat ", " x
+(* and resolveStatementList e : statement list= *)
 
 let rec evalStatement (s : statement) : statement = 
   if is_printable_s s then s else

@@ -17,6 +17,13 @@ let rec is_printable_e_list : expression list -> bool = function
   | String _ | Number _ -> is_printable_e_list sx
   | Unop _ | Binop _ | Call _  -> false
 
+let rec is_printable_s_list : statement list -> bool = function
+  | [] -> true
+  | x :: sx ->
+  match x with
+  | String _ | Break | Continue -> is_printable_s_list sx
+  | If _ | If_no_else _ | While _ | StatementBlock _ | Iterator _ | Iterator_no_step _ | Do _ | Declare _ | Set _ | Call _ | Return _ | DeclarationStatement _ -> false
+
 let is_printable_s : statement -> bool = function
   | String _ | Break | Continue -> true
   | If _ | If_no_else _ | While _ | StatementBlock _ | Iterator _ | Iterator_no_step _ | Do _ | Declare _ | Set _ | Call _ | Return _ | DeclarationStatement _ -> false
@@ -46,9 +53,9 @@ let string_of_value_s (s : statement) : string =
 let rec stepStatement (e : statement) : statement=
 print_endline ("\n\n Step Statement \n\n");  
   match e with
-  | String _ -> failwith "Cannot step"
-  | Break -> failwith "Cannot step"
-  | Continue -> failwith "Cannot step"
+  | String e -> String e
+  | Break -> e
+  | Continue -> e
 
   | If (e, s1, s2) when is_printable_e e && is_printable_s s1 && is_printable_s s2 -> 
       String ("{'if': [{'cond': " ^ string_of_value_e e ^ ", 'then': " ^ string_of_value_s s1 ^ "}], 'else': "^ string_of_value_s s2 ^ "}")
@@ -66,7 +73,9 @@ print_endline ("\n\n Step Statement \n\n");
   | While (e, s) when is_printable_e e -> While(e, stepStatement s)
   | While (e, s) -> While(stepExpression e, s)
   
-  | StatementBlock _ -> failwith "Implement statement block"
+  | StatementBlock s when is_printable_s_list s ->
+      String ("["^ translateStatementList s ^ "]")
+  | StatementBlock s -> StatementBlock(resolveStatementList s)
   
   | Iterator (x, e1, e2, e3, s) when is_printable_e e1 && is_printable_e e2 && is_printable_e e3 && is_printable_s s -> 
       String("{'iterator': " ^ x ^ ", 'from': " ^ string_of_value_e e1 ^ ", 'to': " ^ string_of_value_e e2 ^ ", 'step': " ^ string_of_value_e e3 ^ ", 'do': " ^ string_of_value_s s ^"}")
@@ -142,7 +151,18 @@ and translateExpressionList (e : expression list) : string =
 print_endline ("\n\n Translate Expression List \n\n");
   let x = List.map string_of_value_e e in 
   String.concat ", " x
-(* and resolveStatementList e : statement list= *)
+
+and resolveStatementList (s : statement list) : statement list =
+  (* match e with
+  | [] -> []
+  | h :: t -> stepExpression h :: resolveExpressionList t *)
+  print_endline ("\n\n Resolve Statement List \n\n");
+  List.map stepStatement s 
+
+and translateStatementList (s : statement list) : string =
+print_endline ("\n\n Translate Statement List \n\n");
+  let x = List.map string_of_value_s s in 
+  String.concat ", " x
 
 let rec evalStatement (s : statement) : statement = 
   if is_printable_s s then s else

@@ -46,7 +46,7 @@
   | If_no_else of expression * statement
   | While of expression * statement
   (* | Statement of statement array *)
-  | StatementBlock of statement
+  | StatementBlock of statement list
   | Iterator of string * expression * expression * expression * statement
   | Iterator_no_step of string * expression * expression * statement
   | Do of statement * expression

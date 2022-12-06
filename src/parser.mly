@@ -59,12 +59,12 @@ open Ast
 // %left TIMES  
 
 // %start <Ast.jsonLang> prog
-%start <Ast.statement> prog
+%start <Ast.statement list> prog
 
 %%
 
 prog:
-	| e = statement; EOF { e }
+	| e = statement+; EOF { e }
 	// | e = topStatement; EOF { e }
 	;
 
@@ -93,7 +93,8 @@ statement:
 	//TODO: | x = STRING; LPAREN; eArray = expression array; RPAREN { Call(x, eArray) }
 	// | x = STRING; LPAREN; eArray = expression; RPAREN; { Call(x, eArray) }
 	// | x = STRING; LPAREN; eArray = list(terminated(expression, COMMA)) RPAREN; { Call(x, eArray) }
-	| x = STRING; LPAREN; eArray = separated_list(COMMA, expression) RPAREN; SEMICOLON; { Call(x, eArray) }
+	// | x = STRING; LPAREN; LBRACKET; eArray = separated_list(COMMA, expression); RBRACKET; RPAREN; SEMICOLON; { Call(x, eArray) }
+	| x = STRING; LPAREN; eArray = separated_list(COMMA, expression); RPAREN; SEMICOLON; { Call(x, eArray) }
 	| RETURN; e = expression; SEMICOLON; { Return(e) }
 	| BREAK; SEMICOLON; { Break }
 	| CONTINUE; SEMICOLON; { Continue }
@@ -125,6 +126,7 @@ expression:
 	| e1 = expression; b = MINUS; e2 = expression { Binop(b, e1, e2) }
 	| e1 = expression; b = BINOP; e2 = expression { Binop(b, e1, e2) }
 	//TODO: | x = STRING; LPAREN; eArray = expression array; RPAREN { Call(x, eArray) }
+	// | x = STRING; LPAREN; LBRACKET; eArray = separated_list(COMMA, expression); RBRACKET; RPAREN { Call(x, eArray) }
 	| x = STRING; LPAREN; eArray = separated_list(COMMA, expression); RPAREN { Call(x, eArray) }
 	| s = STRING { String(s) }
 	| n = NUMBER { Number(n) }
@@ -187,3 +189,5 @@ expression:
 // RETURN 						return ...;
 
 // DECLARE FUNCTION 	func ... ([... , ...]){};
+
+// All strings to be enclosed in ' ' (simple quotes)

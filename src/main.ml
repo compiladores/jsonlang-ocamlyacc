@@ -1,7 +1,7 @@
 open Ast
 
 (** [parse s] parses [s] into an AST. *)
-let parse (s : string) : statement =
+let parse (s : string) : statement list=
   let lexbuf = Lexing.from_string s in
   let ast = Parser.prog Lexer.read lexbuf in
   ast
@@ -190,7 +190,12 @@ let rec eval_while e s =
 let parse_jsonLang (s : string) : string =
   (* let e = parse s in
   to_jsonLang e *)
-  s |> parse |> evalStatement |> string_of_value_s
+  let a = parse s in
+  let b = List.map evalStatement a in
+  let c = List.map string_of_value_s b in
+  "[" ^ (String.concat ", " c) ^ "]";
+
+  (* s |> parse |> evalStatement |> string_of_value_s *)
 
   (* let to_jsonLang : statement -> string = function
   | Return e -> "{return: " ^ e ^ "}"

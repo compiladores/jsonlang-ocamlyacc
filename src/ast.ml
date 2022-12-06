@@ -71,7 +71,7 @@
 
   type jsonLang = 
   (* | TopStatement of topStatement array *)
-  | TopStatement of topStatement
+  | Statement of statement
 
   (* type printable = 
   | Unop of string * expression

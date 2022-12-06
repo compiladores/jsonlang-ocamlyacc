@@ -6,6 +6,7 @@ let white = [' ' '\t']+
 let digit = ['0'-'9']
 let number = digit+
 let letter = ['a'-'z' 'A'-'Z']
+(* let string = "'" white* letter+ white* "'" *)
 let string = letter+
 let stringComma = string white* ","?
 let minus = ['-']

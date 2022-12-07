@@ -71,13 +71,11 @@ expression:
 	;
 
 	
-// lenguaje inventado
+// LucasLang
 // ------------------
 
 // IF 								if ... then ...;
 // IF 								if ... then ... else ...;
-// IF 								if [... then ..., ... then ...];
-// IF 								if [... then ..., ... then ...] else ...;
 // WHILE 							while ... do ...;
 // FOR 								for ... form ... to ... step ... do ...;
 // DO 								do ... until ...;

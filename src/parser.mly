@@ -78,6 +78,7 @@ expression:
 // IF 								if ... then ... else ...;
 // WHILE 							while ... do ...;
 // FOR 								for ... form ... to ... step ... do ...;
+// FOR 								for ... form ... to ... do ...;
 // DO 								do ... until ...;
 // BREAK 							break;
 // CONTINUE 					continue;

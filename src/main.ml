@@ -151,7 +151,7 @@ and translateArgumentsList (s : string) : string =
   let e = List.map (fun (y : string) -> "\'" ^ y ^ "\'") d in
   (* Transform list into string divided with , *)
   let f = String.concat ", " e in
-  (* Add brackets , *)
+  (* Add brackets *)
   "[" ^ f ^ "]"
 
 let rec evalStatement (s : statement) : statement = 

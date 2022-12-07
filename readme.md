@@ -53,6 +53,7 @@ IF                |-> if ... then ...;
 IF                |-> if ... then ... else ...;
 WHILE             |-> while ... do ...;
 FOR               |-> for ... form ... to ... step ... do ...;
+FOR               |-> for ... form ... to ... do ...;
 DO                |-> do ... until ...;
 BREAK             |-> break;
 CONTINUE          |-> continue;
@@ -149,9 +150,11 @@ Ventajas:
 - Pocos archivos
 - Curso muy completo online
 - Buena documentación
+- Buena integración con VS Code
+- Pocos Bugs en ejecución
 
 Desventajas:
 
-- Lenguaje complejo de procesar en poco tiempo
+- Paradigma del lenguaje complejo de procesar en poco tiempo
 - Mucho énfasis en los tipos de datos
-- No hay mucha discusión en foros
+- Poca discusión en foros

@@ -1,12 +1,10 @@
-# TP Final Compiladores
+# Parser LucasLang -> JsonLang using Ocaml
 
-## Lenguajes y Compiladores - FIUBA - 2022
+#### Lucas Rial Brandariz - Lenguajes y Compiladores - FIUBA - 2022
 
-### Lucas Rial Brandariz
+<p>&nbsp;</p>
 
-## Parser LucasLang -> JsonLang using Ocaml
-
-### Instalation (Mac)
+## Instalation (Mac)
 
 ```
 $ brew install opam
@@ -18,7 +16,9 @@ $ opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
 Install 'OCaml Platform' extension for VSCode
 ```
 
-### Run
+<p>&nbsp;</p>
+
+## Run
 
 To compile the Lexer and Parser
 
@@ -44,7 +44,9 @@ To parse LucasLang string into JsonLang string
 Interp.Main.parse_jsonLang "...LucasLang...";;
 ```
 
-### LucasLang
+<p>&nbsp;</p>
+
+## LucasLang
 
 <pre>
 IF                |-> if ... then ...;
@@ -61,7 +63,9 @@ RETURN            |-> return ...;
 DECLARE FUNCTION  |-> func ... ([... , ...]){};
 </pre>
 
-### JsonLang
+<p>&nbsp;</p>
+
+## JsonLang
 
 ```
 type Statement<Expression> = 
@@ -118,7 +122,9 @@ type TopStatement<Expression> = Statement<Expression> | DeclarationStatement<Sta
 type JsonLang = TopStatement<Expression>[];
 ```
 
-### Questions
+<p>&nbsp;</p>
+
+## Questions
 
 1. ¿Cuán facil fue aprender esta herramienta de parsing? ¿Por qué?
 

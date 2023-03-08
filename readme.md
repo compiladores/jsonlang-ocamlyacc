@@ -125,6 +125,68 @@ type JsonLang = TopStatement<Expression>[];
 
 <p>&nbsp;</p>
 
+## JsonLang - Extended
+
+```
+type Statement<Expression> = 
+| {
+  if: { cond: Expression; then: Statement<Expression> }[];
+  else?: Statement<Expression>;
+}
+| { while: Expression; do: Statement<Expression> }
+| Statement<Expression>[]
+| { iterator: string; from: Expression; to: Expression; step?: Expression; do: Statement<Expression> }
+| { do: Statement<Expression>; until: Expression }
+| "break"
+| "continue"
+| { declare: string; value: Expression }
+| { set: string; value: Expression }
+| { call: string; args: Expression[] }
+| { return: Expression }
+
+type Binops =
+  | "+"
+  | "-"
+  | "*"
+  | "/"
+  | "^"
+  | "%"
+  | "&"
+  | "|"
+  | ">>"
+  | "<<"
+  | "<"
+  | "<="
+  | ">"
+  | ">="
+  | "=="
+  | "~="
+  | "and"
+  | "or";
+
+type Expression =
+  | { unop: "-" | "!" | "~"; arg: Expression }
+  | { binop: Binops; argl: Expression; argr: Expression }
+  | string
+  | { call: string; args: Expression[] }
+  | number
+  | { literal: string }
+  | Expression[]
+  | { key: string; value: Expression[] }
+
+type DeclarationStatement<Statement>={
+  function: string;
+  args: string[];
+  block: Statement;
+};
+
+type TopStatement<Expression> = Statement<Expression> | DeclarationStatement<Statement<Expression>>
+
+type JsonLang = TopStatement<Expression>[];
+```
+
+<p>&nbsp;</p>
+
 ## Questions
 
 1. ¿Cuán facil fue aprender esta herramienta de parsing? ¿Por qué?
@@ -158,3 +220,27 @@ Desventajas:
 - Paradigma del lenguaje complejo de procesar en poco tiempo
 - Mucho énfasis en los tipos de datos
 - Poca discusión en foros
+
+<p>&nbsp;</p>
+
+## Questions - Extended
+
+1. ¿Cómo agregaste soporte para strings?
+
+Answer
+
+2. ¿Cómo agregaste soporte para arrays?
+
+Answer
+
+3. ¿Cómo agregaste soporte para diccionarios?
+
+Answer
+
+4. ¿Cómo agregaste funciones como first class citizen?
+
+Answer
+
+5. ¿Cómo agregaste clojures?
+
+Answer

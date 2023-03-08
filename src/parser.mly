@@ -33,6 +33,7 @@ open Ast
 %token FUNCTION
 %token SEMICOLON
 %token COMMA
+%token QUOTE
 %token EOF
 
 %start <Ast.statement list> prog
@@ -65,6 +66,7 @@ expression:
 	| u = UNOP; e = expression { Unop(u, e) }
 	| e1 = expression; b = MINUS; e2 = expression { Binop(b, e1, e2) }
 	| e1 = expression; b = BINOP; e2 = expression { Binop(b, e1, e2) }
+	| QUOTE; s = STRING; QUOTE;{ Literal(s) }
 	| x = STRING; LPAREN; eArray = separated_list(COMMA, expression); RPAREN { Call(x, eArray) }
 	| s = STRING { String(s) }
 	| n = NUMBER { Number(n) }

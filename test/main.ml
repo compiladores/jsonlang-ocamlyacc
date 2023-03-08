@@ -166,6 +166,9 @@ let tests = [
 
 (* Other tests *)
   make_test "Remove spaces spaces" "[{'set': 'x', 'value': 1}]" " x   =            1 ;"; 
+
+(* Extended tests *)
+  make_test "Add Strings" "[{'return': {'literal': 'a'}}]" "return 'a';"; 
 ]
 
 let _ = run_test_tt_main ("suite" >::: List.flatten tests)

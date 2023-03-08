@@ -4,6 +4,7 @@
   | String of string
   | Call of string * expression list
   | Number of int
+  | Literal of string
   (* Add printable to be able to print jsonLang*)
   | Printable of string
 
@@ -24,3 +25,4 @@
   | DeclarationStatement of string * string * statement
   (* Add printable to be able to print jsonLang*)
   | Printable of string
+ 

@@ -40,6 +40,7 @@ rule read =
   | "=" { EQUALS }
   | ";" { SEMICOLON }
   | "," { COMMA }
+  | "'" { QUOTE }
   | "(" { LPAREN }
   | ")" { RPAREN }
   | "{" { LBRACE }

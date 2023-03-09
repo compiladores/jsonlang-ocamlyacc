@@ -7,7 +7,7 @@ let parse (s : string) : statement list=
 
 let is_printable_e : expression -> bool = function
    | Printable _ -> true
-   | String _ | Literal _ | Number _ | Unop _ | Binop _ | Call _  -> false
+   | String _ | Literal _ | Array _ | Number _ | Unop _ | Binop _ | Call _  -> false
    (* | String _ | Number _ | Unop _ | Binop _ | Call _  -> false *)
 
 let rec is_printable_e_list : expression list -> bool = function
@@ -15,7 +15,7 @@ let rec is_printable_e_list : expression list -> bool = function
   | x :: sx ->
   match x with
    | Printable _  -> is_printable_e_list sx
-   | String _ | Literal _ | Number _ | Unop _ | Binop _ | Call _  -> false
+   | String _ | Literal _ | Array _ | Number _ | Unop _ | Binop _ | Call _  -> false
    (* | String _ | Number _ | Unop _ | Binop _ | Call _  -> false *)
 
 let rec is_printable_s_list : statement list -> bool = function
@@ -112,6 +112,10 @@ and stepExpression (e: expression) : expression=
   | Number e -> Printable (string_of_int e)
 
   | Literal e -> Printable ("{'literal': '" ^ e ^ "'}")
+
+  | Array e when is_printable_e_list e ->
+      Printable ("{'array': [" ^ translateExpressionList e ^ "]}")
+  | Array e -> Array(resolveExpressionList e)
   
   | String e -> Printable ("\'" ^ e ^ "\'")
   

@@ -171,7 +171,7 @@ type Expression =
   | { call: string; args: Expression[] }
   | number
   | { literal: string }
-  | Expression[]
+  | { array: Expression[] }
   | { key: string; value: Expression[] }
 
 type DeclarationStatement<Statement>={
@@ -227,11 +227,18 @@ Desventajas:
 
 1. ¿Cómo agregaste soporte para strings?
 
-Answer
+- Cree un test de String traduciendo de LucasLang a JsonLangExtendido
+- Agregué Literal en el ast.ml
+- Agregué la comilla " ' " como token en el lexer.mll
+- Agregué la regla para identificar los literales en el parser.mly
+- Agregué la manera de imprimirlos y completé los patter-matching correspondientes en el main.ml
 
 2. ¿Cómo agregaste soporte para arrays?
 
-Answer
+- Cree un test de Array traduciendo de LucasLang a JsonLangExtendido
+- Agregué Array en el ast.ml
+- Agregué la regla para identificar los arrays de expresiones en el parser.mly
+- Agregué la iteración para procesarlos, la manera de imprimirlos y completé los patter-matching correspondientes en el main.ml
 
 3. ¿Cómo agregaste soporte para diccionarios?
 

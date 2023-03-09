@@ -5,6 +5,7 @@
   | Call of string * expression list
   | Number of int
   | Literal of string
+  | Array of expression list
   (* Add printable to be able to print jsonLang*)
   | Printable of string
 

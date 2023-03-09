@@ -62,6 +62,7 @@ statement:
 	;
 
 expression:
+	| LBRACKET; eArray = separated_list(COMMA, expression); RBRACKET; {Array(eArray)}
 	| u = MINUS; e = expression { Unop(u, e) }
 	| u = UNOP; e = expression { Unop(u, e) }
 	| e1 = expression; b = MINUS; e2 = expression { Binop(b, e1, e2) }

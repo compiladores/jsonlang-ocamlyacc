@@ -7,7 +7,7 @@ let parse (s : string) : statement list=
 
 let is_printable_e : expression -> bool = function
    | Printable _ -> true
-   | String _ | Literal _ | Array _ | Number _ | Unop _ | Binop _ | Call _  -> false
+   | String _ | Literal _ | Array _ | Dictionary _ | Record _ | Number _ | Unop _ | Binop _ | Call _  -> false
    (* | String _ | Number _ | Unop _ | Binop _ | Call _  -> false *)
 
 let rec is_printable_e_list : expression list -> bool = function
@@ -15,7 +15,7 @@ let rec is_printable_e_list : expression list -> bool = function
   | x :: sx ->
   match x with
    | Printable _  -> is_printable_e_list sx
-   | String _ | Literal _ | Array _ | Number _ | Unop _ | Binop _ | Call _  -> false
+   | String _ | Literal _ | Array _ | Dictionary _ | Record _ | Number _ | Unop _ | Binop _ | Call _  -> false
    (* | String _ | Number _ | Unop _ | Binop _ | Call _  -> false *)
 
 let rec is_printable_s_list : statement list -> bool = function
@@ -117,6 +117,22 @@ and stepExpression (e: expression) : expression=
       Printable ("{'array': [" ^ translateExpressionList e ^ "]}")
   | Array e -> Array(resolveExpressionList e)
   
+  | Dictionary e when is_printable_e_list e ->
+      Printable ("{'dictionary': [" ^ translateExpressionList e ^ "]}")
+  | Dictionary e -> Dictionary(resolveExpressionList e)
+  
+  | Record (s, e) when is_printable_e e -> 
+      Printable ("{'key': '" ^ s ^ "', 'value': " ^ string_of_value_e e ^ "}")
+  | Record (s, e) -> Record (s, stepExpression e)
+
+  (* | Dictionary (s, e) when is_printable_e e -> 
+      Printable ("{'dictionary': [{'key': '" ^ s ^ "', 'value': " ^ string_of_value_e e ^ "}]}")
+  | Dictionary (s, e) -> Dictionary (s, stepExpression e) *)
+
+  (* | Dictionary e when is_printable_e_list e ->
+      Printable ("{'dictionary': [{" ^ translateExpressionList e ^ "]}")
+  | Dictionary e -> Dictionary(resolveExpressionList e) *)
+
   | String e -> Printable ("\'" ^ e ^ "\'")
   
   | Unop (s, e) when is_printable_e e -> 
@@ -135,9 +151,16 @@ and stepExpression (e: expression) : expression=
 and resolveExpressionList (e : expression list) : expression list =
   List.map stepExpression e 
 
+(* and resolveObjectList (s, e : (string * expression) list) : (string * expression) list =
+  List.map (s, stepExpression o) *)
+
 and translateExpressionList (e : expression list) : string =
   let x = List.map string_of_value_e e in 
   String.concat ", " x
+
+(* and translateObjectList (o : obj_field list) : string =
+  let x = List.map string_of_value_e o in 
+  String.concat ", " x *)
 
 and resolveStatementList (s : statement list) : statement list =
   List.map stepStatement s 

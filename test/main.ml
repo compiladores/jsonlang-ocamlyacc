@@ -172,6 +172,11 @@ let tests = [
   make_test "Array of Expressions"
     "[{'declare': 'x', 'value': {'array': [{'literal': 'a'}, {'literal': 'b'}]}}]" 
     "let x=['a', 'b'];";
+  make_test "Array of mixed Expressions"
+    "[{'declare': 'x', 'value': {'array': [{'unop': '~', 'arg': 7}, {'call': 'function', 'args': ['s']}, {'literal': 'b'}]}}]" 
+    "let x=[~7, function(s), 'b'];";
+  make_test "Dictionary" "[{'return': {'dictionary': [{'key': 'a', 'value': 1}]}}]" "return {a: 1};"; 
+  make_test "Dictionary with multiple keys" "[{'return': {'dictionary': [{'key': 'a', 'value': 1}, {'key': 'b', 'value': {'literal': 'hello'}}]}}]" "return {a: 1, b: 'hello'};"; 
 ]
 
 let _ = run_test_tt_main ("suite" >::: List.flatten tests)

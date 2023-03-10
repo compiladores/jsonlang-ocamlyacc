@@ -32,6 +32,7 @@ open Ast
 %token RETURN
 %token FUNCTION
 %token SEMICOLON
+%token COLON
 %token COMMA
 %token QUOTE
 %token EOF
@@ -63,6 +64,10 @@ statement:
 
 expression:
 	| LBRACKET; eArray = separated_list(COMMA, expression); RBRACKET; {Array(eArray)}
+	// | LBRACE; s = STRING; COLON; e = expression; RBRACE; {Dictionary(s, e)}
+	// | LBRACE; obj = separated_list(COMMA, obj_field); RBRACE; {Dictionary(obj)}
+	| LBRACE; eArray = separated_list(COMMA, expression); RBRACE; {Dictionary(eArray)}
+	| x = STRING; COLON; e = expression; {Record(x, e)}
 	| u = MINUS; e = expression { Unop(u, e) }
 	| u = UNOP; e = expression { Unop(u, e) }
 	| e1 = expression; b = MINUS; e2 = expression { Binop(b, e1, e2) }
@@ -72,6 +77,9 @@ expression:
 	| s = STRING { String(s) }
 	| n = NUMBER { Number(n) }
 	;
+
+// obj_field:
+// 	s = STRING; COLON; e = expression { (s, e) } ;
 
 	
 // LucasLang

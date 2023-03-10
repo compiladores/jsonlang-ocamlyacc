@@ -6,6 +6,9 @@
   | Number of int
   | Literal of string
   | Array of expression list
+  | Dictionary of expression list
+  (* Add record to be able to handle dictionarys*)
+  | Record of string * expression
   (* Add printable to be able to print jsonLang*)
   | Printable of string
 

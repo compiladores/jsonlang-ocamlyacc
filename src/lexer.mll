@@ -39,6 +39,7 @@ rule read =
   | "or" {BINOP (Lexing.lexeme lexbuf)}
   | "=" { EQUALS }
   | ";" { SEMICOLON }
+  | ":" { COLON }
   | "," { COMMA }
   | "'" { QUOTE }
   | "(" { LPAREN }

@@ -172,7 +172,7 @@ type Expression =
   | number
   | { literal: string }
   | { array: Expression[] }
-  | { key: string; value: Expression[] }
+  | { dictionary: { key: string; value: Expression }[] }
 
 type DeclarationStatement<Statement>={
   function: string;

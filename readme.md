@@ -143,6 +143,7 @@ type Statement<Expression> =
 | { set: string; value: Expression }
 | { call: string; args: Expression[] }
 | { return: Expression }
+| DeclarationStatement<Statement>
 
 type Binops =
   | "+"
@@ -250,8 +251,13 @@ Desventajas:
 
 4. ¿Cómo agregaste funciones como first class citizen?
 
-Answer
+- Cree tres test para probar los diferentes requisitos para llamarlas first class citizen
+  - Pasar función por parámetro
+  - Asignar función a variable
+  - Devolver función como return
+- Para la implementación solo tuve que hacer ajustes menores en main.ml ya que la estructura previa soportaba este tipo de comportamiento
 
-5. ¿Cómo agregaste clojures?
+5. ¿Cómo agregaste closures?
 
-Answer
+- Cree un test de declarar una función dentro de la declaración de otra función
+- Al igual que en el caso anterior, solo tuve que hacer un pequeño ajuste en main.ml ya que la estructura previa soportaba este tipo de comportamiento

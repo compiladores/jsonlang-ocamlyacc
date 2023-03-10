@@ -238,11 +238,15 @@ Desventajas:
 - Cree un test de Array traduciendo de LucasLang a JsonLangExtendido
 - Agregué Array en el ast.ml
 - Agregué la regla para identificar los arrays de expresiones en el parser.mly
-- Agregué la iteración para procesarlos, la manera de imprimirlos y completé los patter-matching correspondientes en el main.ml
+- Agregué la iteración para procesar los Arrays, la manera de imprimirlos y completé los patter-matching correspondientes en el main.ml
 
 3. ¿Cómo agregaste soporte para diccionarios?
 
-Answer
+- Cree dos tests de Diccionarios traduciendo de LucasLang a JsonLangExtendido
+- Agregué Dictionary y Record en el ast.ml
+- Agregué los dos puntos en el lexer.mll
+- Agregué las reglas para identificar un Record y un Dictionary en el parser.mly
+- Agregué la iteración para procesar los Records y los Dictionarys, la manera de imprimirlos y completé los patter-matching correspondientes en el main.ml
 
 4. ¿Cómo agregaste funciones como first class citizen?
 
